@@ -1,0 +1,309 @@
+{
+  "version": 1,
+  "updated": "2026-11-02",
+  "kpi": {
+    "processes_total": 370,
+    "departments_count": 12,
+    "campuses": [
+      "Москва",
+      "Санкт-Петербург",
+      "Пермь",
+      "Нижний Новгород"
+    ],
+    "directions_list": [
+      "АХО",
+      "Управление персоналом",
+      "Закупки",
+      "Приём",
+      "Документооборот",
+      "Продажи"
+    ],
+    "people_count": 1250,
+    "projects_total": 15,
+    "projects_support": 4,
+    "interviews_count": 45,
+    "bpmn_count": 12,
+    "cjm_count": 8,
+    "tz_digital_count": 6,
+    "problems_count": 120,
+    "proposals_count": 34,
+    "strategy_sessions": 14,
+    "strategy_people": 320,
+    "digital_services": 8,
+    "elk_services_changed": 55,
+    "lnas_verified": 45,
+    "trained_employees": 180,
+    "trained_dpo": 95,
+    "rid_registered": 1,
+    "methodologies_created": 1,
+    "regulatory_docs": 62
+  },
+  "projects": [
+    {
+      "id": "p1",
+      "name": "Оптимизация закупок",
+      "description": "Оптимизация закупочных процедур: сокращение сроков согласования и унификация документов. Включает аудит текущих процедур, пилотный запуск единых форм и обучение сотрудников закупочного блока.",
+      "current_stage": "implementation",
+      "stage_role": "owner",
+      "direction": "обеспечивающий",
+      "owner": "Иванов И.И.",
+      "participants": [
+        "Управление закупок",
+        "Финансовый отдел",
+        "АХО"
+      ],
+      "users": [
+        "сотрудники"
+      ],
+      "start": "2024-01-15",
+      "end": "2024-06-30",
+      "status": "завершён",
+      "tags": [
+        "процесс:закупки",
+        "кампус:Москва",
+        "роль:сотрудник"
+      ],
+      "stages": {
+        "analysis": {
+          "status": "завершён"
+        },
+        "current_state": {
+          "status": "завершён"
+        },
+        "target_state": {
+          "status": "завершён"
+        },
+        "decision": {
+          "status": "завершён"
+        },
+        "implementation": {
+          "status": "завершён",
+          "quarters": {
+            "2024-Q1": {
+              "status": "завершён",
+              "items": [
+                "проведён аудит"
+              ]
+            },
+            "2024-Q2": {
+              "status": "завершён",
+              "items": [
+                "пилот"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "p2",
+      "name": "Приёмная кампания 2025",
+      "description": "Обновление процесса приёма абитуриентов, переход на онлайн-подачу документов",
+      "direction": "основной",
+      "current_stage": "implementation",
+      "stage_role": "joint",
+      "owner": "Смирнов А.В.",
+      "participants": [
+        "Приёмная комиссия",
+        "ИТ-департамент"
+      ],
+      "users": [
+        "студенты",
+        "абитуриенты"
+      ],
+      "start": "2024-03-01",
+      "end": "2027-03-31",
+      "status": "в работе",
+      "tags": [
+        "процесс:приём",
+        "кампус:Питер",
+        "роль:студент"
+      ],
+      "stages": {
+        "analysis": {
+          "status": "завершён"
+        },
+        "current_state": {
+          "status": "завершён"
+        },
+        "target_state": {
+          "status": "завершён"
+        },
+        "decision": {
+          "status": "завершён"
+        },
+        "implementation": {
+          "status": "в работе",
+          "quarters": {
+            "2026-Q2": {
+              "status": "завершён",
+              "items": [
+                "пилот"
+              ]
+            },
+            "2026-Q3": {
+              "status": "завершён",
+              "items": [
+                "доработка"
+              ]
+            },
+            "2026-Q4": {
+              "status": "в работе",
+              "items": [
+                "запуск"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "p3",
+      "name": "Онбординг сотрудников",
+      "description": "Единый процесс адаптации и онбординга новых сотрудников",
+      "direction": "обеспечивающий",
+      "current_stage": "current_state",
+      "stage_role": "po",
+      "owner": "Волкова Е.Н.",
+      "participants": [
+        "Управление персонала",
+        "АХО",
+        "ИТ-департамент"
+      ],
+      "users": [
+        "сотрудники"
+      ],
+      "start": "2024-05-10",
+      "end": "2024-12-15",
+      "status": "на паузе",
+      "tags": [
+        "процесс:HR",
+        "кампус:Новосибирск",
+        "роль:сотрудник"
+      ],
+      "stages": {
+        "analysis": {
+          "status": "завершён"
+        },
+        "current_state": {
+          "status": "в работе"
+        },
+        "target_state": {
+          "status": "ожидает"
+        },
+        "decision": {
+          "status": "ожидает"
+        },
+        "implementation": {
+          "status": "не начат",
+          "quarters": {}
+        }
+      }
+    },
+    {
+      "id": "p4",
+      "name": "Цифровизация документооборота",
+      "description": "Перевод внутреннего документооборота в электронный формат",
+      "current_stage": "decision",
+      "stage_role": "po",
+      "direction": "основной",
+      "owner": "Соколов П.Р.",
+      "participants": [
+        "Канцелярия",
+        "ИТ-департамент",
+        "Юридический отдел"
+      ],
+      "users": [
+        "сотрудники",
+        "студенты"
+      ],
+      "start": "2024-02-01",
+      "end": "2024-11-30",
+      "status": "в работе",
+      "tags": [
+        "процесс:документооборот",
+        "кампус:Москва",
+        "роль:сотрудник"
+      ],
+      "stages": {
+        "analysis": {
+          "status": "завершён"
+        },
+        "current_state": {
+          "status": "завершён"
+        },
+        "target_state": {
+          "status": "завершён"
+        },
+        "decision": {
+          "status": "в работе"
+        },
+        "implementation": {
+          "status": "не начат",
+          "quarters": {}
+        }
+      }
+    },
+    {
+      "id": "p5",
+      "name": "Внедрение CRM в продажах",
+      "description": "Внедрение CRM для учёта обращений и сделок в продажах",
+      "current_stage": "implementation",
+      "stage_role": "owner",
+      "direction": "основной",
+      "owner": "Фёдорова М.С.",
+      "participants": [
+        "Отдел продаж",
+        "ИТ-департамент"
+      ],
+      "users": [
+        "сотрудники"
+      ],
+      "start": "2024-01-10",
+      "end": "2024-09-30",
+      "status": "завершён",
+      "tags": [
+        "процесс:продажи",
+        "кампус:Питер",
+        "роль:сотрудник"
+      ],
+      "stages": {
+        "analysis": {
+          "status": "завершён"
+        },
+        "current_state": {
+          "status": "завершён"
+        },
+        "target_state": {
+          "status": "завершён"
+        },
+        "decision": {
+          "status": "завершён"
+        },
+        "implementation": {
+          "status": "завершён",
+          "quarters": {
+            "2024-Q1": {
+              "status": "завершён",
+              "items": [
+                "старт"
+              ]
+            },
+            "2024-Q2": {
+              "status": "завершён",
+              "items": [
+                "миграция данных"
+              ]
+            },
+            "2024-Q3": {
+              "status": "завершён",
+              "items": [
+                "обучение"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ]
+}
