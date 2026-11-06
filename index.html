@@ -7,8 +7,8 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     /* ===== ФИРМЕННЫЙ ШРИФТ Brand (Regular / Italic / Black) =====
-       Основной путь: fonts/Brand-Regular.otf, fonts/Brand-Italic.otf, fonts/Brand-Black.otf.
-       Запасные пути - на случай, если файлы загружены с именами вида «fonts:Brand-*.otf». */
+       Файлы: fonts/Brand-Regular.otf, fonts/Brand-Italic.otf, fonts/Brand-Black.otf.
+       Если файлов нет, страница использует обычные шрифты и прежнюю жирность текста (класс brand-fonts не добавляется). */
     @font-face { font-family: 'Brand'; font-style: normal; font-weight: 400; font-display: swap;
       src: url('fonts/Brand-Regular.otf') format('opentype'),
            url('fonts/fonts%3ABrand-Regular.otf') format('opentype'),
@@ -309,22 +309,34 @@
     .tl-legend span { display: flex; align-items: center; gap: 6px; }
     .star-icon { font-size: 16px; }
 
-    /* ===== НАЧЕРТАНИЯ ШРИФТА =====
-       Доступны только Regular (400) и Black (900): Black - только заголовки и крупные числа, курсив - пояснения. */
-    * { font-weight: 400 !important; }
-    .header h1, .section-title, .kpi-card .value, .dir-block .val, .opt-total-card .val, .artifact-card .val,
-    .dir-head h3, .tl-header-cell h4, .impl-yr b { font-weight: 900 !important; }
-    .section-title span, .kpi-card .sub, .dir-head p, .dir-content p, .tl-header-cell p { font-style: italic; }
+    /* ===== НАЧЕРТАНИЯ ФИРМЕННОГО ШРИФТА (включаются, только если шрифт реально загрузился) =====
+       Доступны Regular (400) и Black (900): Black - заголовки и крупные числа, курсив - пояснения. */
+    html.brand-fonts * { font-weight: 400 !important; }
+    html.brand-fonts .header h1, html.brand-fonts .part-title, html.brand-fonts .section-title,
+    html.brand-fonts .kpi-card .value, html.brand-fonts .dir-block .val, html.brand-fonts .opt-total-card .val,
+    html.brand-fonts .artifact-card .val, html.brand-fonts .dir-head h3, html.brand-fonts .tl-header-cell h4,
+    html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active { font-weight: 900 !important; }
+    html.brand-fonts .section-title span, html.brand-fonts .part-title span, html.brand-fonts .kpi-card .sub,
+    html.brand-fonts .dir-head p, html.brand-fonts .dir-content p, html.brand-fonts .tl-header-cell p { font-style: italic; }
     .tl-name-cell { font-size: 14px; }
+
+    /* ===== ЧАСТИ ДАШБОРДА (вкладки) ===== */
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .tab-btn { appearance: none; border: 1px solid var(--border); background: #fff; color: #0F2D69; font: inherit; font-size: 14px;
+      padding: 10px 20px; border-radius: 10px; cursor: pointer; transition: background .15s, color .15s, border-color .15s; }
+    .tab-btn:hover { background: #E6ECF7; }
+    .tab-btn.active { background: #0F2D69; border-color: #0F2D69; color: #fff; }
+    .tab-btn:focus-visible { outline: 2px solid #0FA0D7; outline-offset: 2px; }
+    .tab-panel[hidden] { display: none; }
+    .part-title { font-size: 20px; margin: 0 0 4px; color: #0F2D69; letter-spacing: -0.3px; }
+    .part-title span { font-size: 13px; color: var(--text-muted); margin-left: 8px; }
+    .tab-panel > .section-title:first-of-type { margin-top: 16px; }
 
     /* ===== ФИРМЕННАЯ ПАЛИТРА =====
        Основные: тёмно-синий #0F2D69, синий #234B9B; серые #929292 / #C6C6C6 / #E6E6E6.
-       Дополнительные (насыщенные): голубой #0FA0D7, зелёный #009B64, оранжевый #EB691E,
-       жёлтый #FAB900, красный #E61E3C, фиолетовый #7D50B9. Насыщенные цвета не смешиваются с пастельными. */
-    :root { --brand-navy: #0F2D69; --brand-blue: #234B9B; --brand-sky: #0FA0D7; --brand-green: #009B64;
-            --brand-orange: #EB691E; --brand-yellow: #FAB900; --brand-red: #E61E3C; --brand-purple: #7D50B9; }
+       Дополнительные (насыщенные): голубой #0FA0D7, зелёный #009B64, оранжевый #EB691E, жёлтый #FAB900, красный #E61E3C. */
     .header h1, .section-title, .dir-head h3, .tl-header-cell h4, .kpi-card .value, .dir-block .val,
-    .opt-total-card .val, .artifact-card .val, .impl-yr b { color: var(--brand-navy); }
+    .opt-total-card .val, .artifact-card .val, .impl-yr b { color: #0F2D69; }
   </style>
 </head>
 <body>
@@ -337,25 +349,17 @@
     <div class="date" id="update-date"></div>
   </div>
 
-  <!-- ГЛОБАЛЬНЫЕ KPI -->
-  <div class="section-title">Охват <span>ключевые показатели</span></div>
-  <div class="kpi-grid" id="kpi-grid"></div>
-
-  <!-- НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ -->
-  <div class="section-title">Направления деятельности</div>
-  <div class="dir-sections" id="directions"></div>
-
-  <!-- ГРАФИКИ -->
-  <div class="section-title">Аналитика</div>
-  <div class="charts-grid">
-    <div class="chart-card"><h3>Статусы проектов</h3><div class="chart-wrap"><canvas id="chart-status"></canvas></div></div>
-    <div class="chart-card"><h3>Этапы реализации проектов</h3><div class="chart-wrap"><canvas id="chart-stages"></canvas></div></div>
+  
+  <!-- ЧАСТИ ДАШБОРДА -->
+  <div class="tabs" role="tablist" aria-label="Части дашборда">
+    <button class="tab-btn" id="tab-projects" role="tab" data-tab="projects" aria-controls="panel-projects" aria-selected="true">Проекты и статусы</button>
+    <button class="tab-btn" id="tab-scope" role="tab" data-tab="scope" aria-controls="panel-scope" aria-selected="false">Охват и направления</button>
   </div>
 
-  <!-- ТАЙМЛАЙН ПРОЕКТОВ -->
-  <div class="section-title">Таймлайн проектов <span>по этапам</span></div>
-  
-  <div class="timeline-container">
+  <!-- ЧАСТЬ 1: ПРОЕКТЫ И СТАТУСЫ -->
+  <section class="tab-panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
+    <h2 class="part-title">Проекты и статусы <span>таймлайн проектов по этапам</span></h2>
+    <div class="timeline-container">
     <div class="tl-legend">
       <span><span class="star-icon" style="color:#E61E3C">★</span> Этап на стороне владельца процесса</span>
       <span><span class="star-icon" style="color:#EB691E">★</span> Совместная работа ПО и владельца</span>
@@ -385,6 +389,26 @@
     <button id="export-csv" style="padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer; border:1px solid var(--primary); background:var(--primary); color:#fff;">Экспорт CSV</button>
     <button id="export-json" style="padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer; border:1px solid var(--border); background:#fff; color:var(--text-main);">Экспорт JSON</button>
   </div>
+  </section>
+
+  <!-- ЧАСТЬ 2: ОХВАТ И НАПРАВЛЕНИЯ -->
+  <section class="tab-panel" id="panel-scope" role="tabpanel" aria-labelledby="tab-scope" hidden>
+    <h2 class="part-title">Охват и направления <span>показатели, направления деятельности и аналитика</span></h2>
+    <!-- ГЛОБАЛЬНЫЕ KPI -->
+  <div class="section-title">Охват <span>ключевые показатели</span></div>
+  <div class="kpi-grid" id="kpi-grid"></div>
+
+  <!-- НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ -->
+  <div class="section-title">Направления деятельности</div>
+  <div class="dir-sections" id="directions"></div>
+
+  <!-- ГРАФИКИ -->
+  <div class="section-title">Аналитика</div>
+  <div class="charts-grid">
+    <div class="chart-card"><h3>Статусы проектов</h3><div class="chart-wrap"><canvas id="chart-status"></canvas></div></div>
+    <div class="chart-card"><h3>Этапы реализации проектов</h3><div class="chart-wrap"><canvas id="chart-stages"></canvas></div></div>
+  </div>
+  </section>
 
   <script>
     let rawData = [];
@@ -408,6 +432,20 @@
       const m = String(v == null ? '' : v).match(/^(\d{4})-(\d{2})-(\d{2})/);
       return m ? `${m[3]}.${m[2]}.${m[1]}` : (v ? String(v) : '—');
     }
+    // Ширина видимой области таблицы таймлайна (для раскрытой части строки)
+    function syncTlVw() {
+      const g = document.getElementById('tl-grid'), sc = document.getElementById('tl-scroll');
+      if (g && sc && sc.clientWidth) g.style.setProperty('--tl-vw', sc.clientWidth + 'px');
+    }
+    window.addEventListener('resize', syncTlVw);
+
+    // Фирменный шрифт: класс brand-fonts включается, только если файлы шрифтов реально загрузились
+    (function () {
+      if (!document.fonts || !document.fonts.load) return;
+      Promise.all([document.fonts.load('400 16px Brand'), document.fonts.load('900 16px Brand')])
+        .then(r => { if (r.every(a => a && a.length && a.every(f => f.status === 'loaded'))) document.documentElement.classList.add('brand-fonts'); })
+        .catch(() => {});
+    })();
 
     const STAGE_KEYS = ['analysis', 'current_state', 'target_state', 'decision', 'implementation'];
     function projectStageKey(p) {
@@ -640,10 +678,7 @@
       gridEl.style.setProperty('--yrs', YEARS.length);
       document.getElementById('impl-years').innerHTML = YEARS.map(y =>
         `<div class="impl-yr"><b>${y}</b><div class="impl-qs"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div></div>`).join('');
-
-      const scrollEl = document.getElementById('tl-scroll');
-      gridEl.style.setProperty('--tl-vw', scrollEl.clientWidth + 'px');
-      if (!window.__tlResizeBound) { window.__tlResizeBound = true; window.addEventListener('resize', () => { const g = document.getElementById('tl-grid'), sc = document.getElementById('tl-scroll'); if (g && sc) g.style.setProperty('--tl-vw', sc.clientWidth + 'px'); }); }
+      syncTlVw();
 
       function getStageStates(p) {
         if (isDeployed(p)) return [...stageKeys.map(() => 'done'), 'deployed'];
@@ -806,6 +841,24 @@
       const blob = new Blob([JSON.stringify(rawData, null, 2)], { type: 'application/json' });
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'projects.json'; a.click();
     });
+  
+    // ============================================================
+    // ВКЛАДКИ: «Проекты и статусы» / «Охват и направления»
+    // ============================================================
+    (function () {
+      const tabs = [...document.querySelectorAll('.tab-btn')];
+      const ids = tabs.map(t => t.dataset.tab);
+      function show(id, store) {
+        if (!ids.includes(id)) id = ids[0];
+        tabs.forEach(t => { const on = t.dataset.tab === id; t.classList.toggle('active', on); t.setAttribute('aria-selected', on ? 'true' : 'false'); });
+        document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.id !== 'panel-' + id; });
+        if (store && history.replaceState) history.replaceState(null, '', '#' + id);
+        requestAnimationFrame(() => { Object.values(charts).forEach(c => c.resize()); syncTlVw(); });
+      }
+      tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.tab, true)));
+      window.addEventListener('hashchange', () => show(location.hash.replace('#', ''), false));
+      show(location.hash.replace('#', ''), false);
+    })();
   </script>
 </body>
 </html>
