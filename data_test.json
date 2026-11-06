@@ -205,7 +205,7 @@
       "name": "Цифровизация документооборота",
       "description": "Перевод внутреннего документооборота в электронный формат",
       "current_stage": "decision",
-      "stage_role": "po",
+      "stage_role": "owner",
       "direction": "основной",
       "owner": "Соколов П.Р.",
       "participants": [
