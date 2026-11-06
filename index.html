@@ -201,9 +201,6 @@
     .tl-name-cell, .tl-header-cell.title { position: sticky; left: 0; z-index: 5; box-shadow: 2px 0 4px -2px rgba(15,23,42,0.12); }
     .tl-name-cell { background: var(--surface); }
 
-    .desc-full { margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.55; color: var(--text-main); }
-    .desc-full strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
-
     .tl-desc-cell { padding: 12px 14px; font-size: 12px; color: var(--text-muted); line-height: 1.45; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); display: flex; align-items: center; transition: background 0.2s; }
     .tl-desc-cell span { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     .tl-row-wrapper:hover .tl-desc-cell { background: #F6F6F6; }
@@ -329,7 +326,7 @@
     html.brand-fonts .kpi-card .value, html.brand-fonts .dir-block .val, html.brand-fonts .opt-total-card .val,
     html.brand-fonts .artifact-card .val, html.brand-fonts .dir-head h3, html.brand-fonts .tl-header-cell h4,
     html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active, html.brand-fonts .tl-mark.owner,
-    html.brand-fonts .res-table thead th { font-weight: 900 !important; }
+    html.brand-fonts .res-table thead th, html.brand-fonts .status-head h4, html.brand-fonts .status-sec h5 { font-weight: 900 !important; }
     html.brand-fonts .section-title span, html.brand-fonts .part-title span, html.brand-fonts .kpi-card .sub,
     html.brand-fonts .dir-head p, html.brand-fonts .dir-content p, html.brand-fonts .tl-header-cell p,
     html.brand-fonts .res-table thead th small { font-style: italic; }
@@ -372,6 +369,26 @@
     .res-table td.c-after { background: #DDF2EA; color: #006B45; }
     .res-table tr.proj-first > td { border-top: 2px solid #C6C6C6; }
     .res-table tbody tr:first-child > td { border-top: 1px solid var(--border); }
+
+    /* ===== БЛОК «СТАТУС» В РАСКРЫВАЮЩЕМСЯ СПИСКЕ ПРОЕКТА ===== */
+    .status-card { margin: 0 0 22px; background: #fff; border: 1px solid var(--border); border-left: 6px solid var(--st-accent, #234B9B);
+      border-radius: 12px; box-shadow: 0 2px 10px rgba(15,45,105,0.08); overflow: hidden; }
+    .status-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; padding: 14px 20px; background: var(--st-tint, #E6ECF7); border-bottom: 1px solid var(--border); }
+    .status-head h4 { margin: 0 8px 0 0; font-size: 19px; color: #0F2D69; letter-spacing: -0.2px; }
+    .status-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 999px; background: #fff; border: 1px solid var(--border); font-size: 12px; color: #0F2D69; line-height: 1.4; }
+    .status-chip .ic { font-size: 13px; }
+    .status-date { margin-left: auto; font-size: 12px; color: var(--text-muted); }
+    .status-body { padding: 18px 22px 22px; }
+    .status-summary { margin: 0 0 18px; font-size: 15px; line-height: 1.65; color: #1A1A1A; max-width: 118ch; }
+    .status-text p { margin: 0 0 12px; font-size: 14px; line-height: 1.65; color: #1A1A1A; max-width: 118ch; }
+    .status-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 900px) { .status-grid { grid-template-columns: 1fr; } }
+    .status-sec { background: #fff; border: 1px solid var(--border); border-top: 3px solid var(--sec); border-radius: 10px; padding: 14px 18px 8px; }
+    .status-sec h5 { margin: 0 0 12px; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--sec); }
+    .status-sec ul { margin: 0; padding: 0; list-style: none; }
+    .status-sec li { position: relative; margin: 0 0 11px; padding-left: 24px; font-size: 14px; line-height: 1.6; color: #1A1A1A; }
+    .status-sec li::before { content: var(--ico); position: absolute; left: 0; top: 0; color: var(--sec); font-size: 14px; }
+    .status-empty { color: var(--text-muted); font-size: 14px; font-style: italic; }
   </style>
 </head>
 <body>
@@ -812,7 +829,7 @@
             ${cellsHtml}
             <div class="tl-details-cell">
               <div class="details-container">
-                ${p.description ? `<div class="desc-full"><strong>Описание</strong>${esc(p.description)}</div>` : ''}
+                ${statusBlock(p)}
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                   <div class="info-list">
                     <div class="info-item"><strong>Владелец:</strong> ${esc(p.owner)}</div>
@@ -820,6 +837,7 @@
                     <div class="info-item"><strong>Пользователи:</strong> ${esc((p.users || []).join(', '))}</div>
                     <div class="info-item"><strong>Дата начала:</strong> ${esc(fmtDMY(p.start))}</div>
                     <div class="info-item"><strong>Дата окончания:</strong> ${esc(fmtDMY(p.end))}</div>
+                    ${p.description ? `<div class="info-item"><strong>Описание:</strong> ${esc(p.description)}</div>` : ''}
                   </div>
                   <div>
                     <div style="font-weight:600; margin-bottom:12px; font-size:14px;">Внедрение по кварталам</div>
@@ -846,6 +864,41 @@
     }
     let TL_YEARS = [2024, 2025, 2026];
 
+    // ---- Блок «Статус» в раскрывающемся списке проекта ----
+    const STAGE_NAMES = { analysis: 'Анализ', current_state: 'Текущее состояние', target_state: 'Целевое состояние',
+      decision: 'Принятие решения', implementation: 'Внедрение изменений', deployed: 'Завершён' };
+    const ROLE_CHIPS = { owner: ['!', 'На стороне владельца процесса'], joint: ['🤝', 'Совместная работа ПО и владельца'], po: ['★', 'Работа на стороне ПО'] };
+    function statusBlock(p) {
+      const r = p.status_report || {};
+      const st = String(p.status || '').trim().toLowerCase();
+      const palette = st === 'в работе' ? ['#234B9B', '#E6ECF7'] : st === 'на паузе' ? ['#FAB900', '#FFF1C2']
+        : DEPLOYED_STATUSES.includes(st) ? ['#009B64', '#DDF2EA'] : ['#929292', '#EDEDED'];
+      const role = ['owner', 'joint', 'po'].includes(p.stage_role) ? p.stage_role : 'po';
+      const stage = STAGE_NAMES[projectStageKey(p)] || '';
+      const sec = (title, ico, color, arr) => (Array.isArray(arr) && arr.length)
+        ? `<section class="status-sec" style="--sec:${color}; --ico:'${ico}'"><h5>${title}</h5><ul>${arr.map(x => `<li>${esc(x)}</li>`).join('')}</ul></section>` : '';
+      const sections = [
+        sec('Что сделано', '✓', '#009B64', r.done),
+        sec('Что делается сейчас', '▸', '#234B9B', r.in_progress),
+        sec('Проблемы и риски', '!', '#E61E3C', r.issues),
+        sec('Ближайшие шаги', '→', '#0F2D69', r.next)
+      ].join('');
+      const paragraphs = String(r.text || '').split(/\n{2,}/).map(t => t.trim()).filter(Boolean)
+        .map(t => `<p>${esc(t).replace(/\n/g, '<br>')}</p>`).join('');
+      const body = (r.summary ? `<p class="status-summary">${esc(r.summary)}</p>` : '')
+        + (paragraphs ? `<div class="status-text">${paragraphs}</div>` : '')
+        + (sections ? `<div class="status-grid">${sections}</div>` : '');
+      return `<div class="status-card" style="--st-accent:${palette[0]}; --st-tint:${palette[1]}">
+        <div class="status-head">
+          <h4>Статус</h4>
+          ${stage ? `<span class="status-chip"><span class="ic">📍</span>Этап: ${esc(stage)}</span>` : ''}
+          <span class="status-chip"><span class="ic">${ROLE_CHIPS[role][0]}</span>${ROLE_CHIPS[role][1]}</span>
+          ${r.updated ? `<span class="status-date">Актуально на ${esc(fmtDMY(r.updated))}</span>` : ''}
+        </div>
+        <div class="status-body">${body || '<div class="status-empty">Статус по проекту пока не заполнен.</div>'}</div>
+      </div>`;
+    }
+
     function tlSkeleton(key) {
       const years = TL_YEARS.map(y =>
         `<div class="impl-yr"><b>${y}</b><div class="impl-qs"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div></div>`).join('');
@@ -866,7 +919,6 @@
       </div>`;
     }
 
-    // Таблица завершённых проектов (структура: процесс, описание до оптимизации, целевые показатели, мероприятия)
     function renderResultsTable(list) {
       const host = document.getElementById('tl-table-done');
       if (!list.length) {
