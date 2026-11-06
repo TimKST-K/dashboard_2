@@ -187,14 +187,12 @@
     .tl-dot.done { background: #0F2D69; box-shadow: 0 0 0 1px #0F2D69; }
     .tl-dot.planned { background: #fff; border: 2px solid #234B9B; box-shadow: none; }
 
-    /* Обозначения этапов: владелец - красный «!», совместная работа - рукопожатие, ПО - зелёная звезда */
     .tl-mark { position: relative; z-index: 3; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
       line-height: 1; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
     .tl-mark.owner { background: #E61E3C; color: #fff; font-size: 22px; box-shadow: 0 2px 6px rgba(230,30,60,0.35); }
     .tl-mark.joint { background: #fff; border: 2px solid #EB691E; font-size: 17px; box-shadow: 0 2px 6px rgba(235,105,30,0.30); }
     .tl-mark.sm { width: 20px; height: 20px; font-size: 13px; animation: none; box-shadow: none; display: inline-flex; vertical-align: middle; }
     .tl-mark.joint.sm { font-size: 11px; border-width: 1.5px; }
-    /* Завершённый этап - зелёная галочка */
     .tl-check.sm { width: 22px; height: 22px; line-height: 22px; font-size: 14px; border-radius: 5px; box-shadow: none; }
 
     .tl-name-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -254,6 +252,8 @@
       .tl-mark.owner { font-size: 19px; }
       .tl-mark.joint { font-size: 15px; }
       .tl-mark.sm { width: 20px; height: 20px; }
+      .res-table { min-width: 1080px; font-size: 12px; }
+      .res-table th, .res-table td { padding: 10px 10px; }
     }
     
     /* Звезды */
@@ -328,9 +328,11 @@
     html.brand-fonts .header h1, html.brand-fonts .part-title, html.brand-fonts .section-title,
     html.brand-fonts .kpi-card .value, html.brand-fonts .dir-block .val, html.brand-fonts .opt-total-card .val,
     html.brand-fonts .artifact-card .val, html.brand-fonts .dir-head h3, html.brand-fonts .tl-header-cell h4,
-    html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active, html.brand-fonts .tl-mark.owner { font-weight: 900 !important; }
+    html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active, html.brand-fonts .tl-mark.owner,
+    html.brand-fonts .res-table thead th { font-weight: 900 !important; }
     html.brand-fonts .section-title span, html.brand-fonts .part-title span, html.brand-fonts .kpi-card .sub,
-    html.brand-fonts .dir-head p, html.brand-fonts .dir-content p, html.brand-fonts .tl-header-cell p { font-style: italic; }
+    html.brand-fonts .dir-head p, html.brand-fonts .dir-content p, html.brand-fonts .tl-header-cell p,
+    html.brand-fonts .res-table thead th small { font-style: italic; }
     .tl-name-cell { font-size: 14px; }
 
     /* ===== ЧАСТИ ДАШБОРДА (вкладки) ===== */
@@ -350,6 +352,26 @@
        Дополнительные (насыщенные): голубой #0FA0D7, зелёный #009B64, оранжевый #EB691E, жёлтый #FAB900, красный #E61E3C. */
     .header h1, .section-title, .dir-head h3, .tl-header-cell h4, .kpi-card .value, .dir-block .val,
     .opt-total-card .val, .artifact-card .val, .impl-yr b { color: #0F2D69; }
+
+    /* ===== ТАБЛИЦА ЗАВЕРШЁННЫХ ПРОЕКТОВ ===== */
+    .res-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 24px; overflow: hidden; }
+    .res-scroll { overflow-x: auto; }
+    .res-table { width: 100%; min-width: 1180px; border-collapse: collapse; font-size: 13px; color: var(--text-main); }
+    .res-table th, .res-table td { border: 1px solid var(--border); padding: 12px 14px; vertical-align: top; text-align: left; line-height: 1.5; }
+    .res-table thead th { background: #E6ECF7; color: #0F2D69; text-align: center; vertical-align: middle; font-size: 12px; }
+    .res-table thead th small { display: block; margin-top: 6px; font-size: 10.5px; line-height: 1.35; color: var(--text-muted); text-transform: none; }
+    .res-table td.c-num { width: 44px; text-align: center; color: var(--text-muted); }
+    .res-table td.c-name { min-width: 190px; }
+    .res-table td.c-desc, .res-table td.c-meas { white-space: pre-line; }
+    .res-table td.c-meas { min-width: 280px; }
+    .res-table td.c-meas .m-title { display: block; margin-bottom: 4px; }
+    .res-table td.c-meas ul { margin: 0; padding-left: 18px; white-space: normal; }
+    .res-table td.c-meas li { margin: 0 0 4px; }
+    .res-table td.c-unit { text-align: center; white-space: nowrap; }
+    .res-table td.c-val { text-align: center; }
+    .res-table td.c-after { background: #DDF2EA; color: #006B45; }
+    .res-table tr.proj-first > td { border-top: 2px solid #C6C6C6; }
+    .res-table tbody tr:first-child > td { border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
@@ -371,9 +393,8 @@
 
   <!-- ЧАСТЬ 1: ПРОЕКТЫ И СТАТУСЫ -->
   <section class="tab-panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
-    <h2 class="part-title">Проекты и статусы <span>таймлайн проектов по этапам</span></h2>
+    <h2 class="part-title">Проекты и статусы <span>таймлайн проектов и результаты завершённых проектов</span></h2>
 
-    <!-- Условные обозначения -->
     <div class="timeline-container" style="margin: 16px 0;">
       <div class="tl-legend">
         <span><span class="tl-mark owner sm">!</span> Этап на стороне владельца процесса</span>
@@ -437,7 +458,6 @@
       const m = String(v == null ? '' : v).match(/^(\d{4})-(\d{2})-(\d{2})/);
       return m ? `${m[3]}.${m[2]}.${m[1]}` : (v ? String(v) : '—');
     }
-    // Ширина видимой области каждой таблицы таймлайна (для раскрытой части строки)
     function syncTlVw() {
       document.querySelectorAll('.tl-scroll').forEach(sc => {
         const g = sc.querySelector('.tl-grid');
@@ -731,7 +751,6 @@
         const doneMark = (title) => `<div class="tl-check sm" title="${title}">✓</div>`;
         const dot = c => `<div class="tl-dot ${c}"></div>`;
 
-        // Линия идёт только до текущего этапа (для завершённых проектов - до итоговой галочки)
         const endCol = states[COLS - 1] === 'deployed' ? COLS - 1 : states.indexOf('current');
 
         let starSeen = false;
@@ -739,7 +758,7 @@
         for (let i = 0; i < COLS; i++) {
           const state = states[i];
           let inner = '';
-          let endPct = 50;   // где обрывается линия в текущем столбце (в % ширины)
+          let endPct = 50;
           if (state === 'deployed') {
             inner = `<div class="tl-check" title="Завершён">✓</div>`;
           } else if (i === 4) {
@@ -820,7 +839,6 @@
     }
 
 
-    // Обозначения текущего этапа в зависимости от того, чья сторона работает
     function roleMarker(role) {
       if (role === 'owner') return '<div class="tl-mark owner" title="Этап на стороне владельца процесса">!</div>';
       if (role === 'joint') return '<div class="tl-mark joint" title="Совместная работа ПО и владельца">🤝</div>';
@@ -828,7 +846,6 @@
     }
     let TL_YEARS = [2024, 2025, 2026];
 
-    // Каркас таблицы таймлайна (шапка с годами и кварталами)
     function tlSkeleton(key) {
       const years = TL_YEARS.map(y =>
         `<div class="impl-yr"><b>${y}</b><div class="impl-qs"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div></div>`).join('');
@@ -849,7 +866,53 @@
       </div>`;
     }
 
-    // Две таблицы: проекты в работе / на паузе и завершённые проекты
+    // Таблица завершённых проектов (структура: процесс, описание до оптимизации, целевые показатели, мероприятия)
+    function renderResultsTable(list) {
+      const host = document.getElementById('tl-table-done');
+      if (!list.length) {
+        host.innerHTML = '<div class="res-card"><div style="padding:32px; text-align:center; color:#929292;">Завершённых проектов пока нет</div></div>';
+        return;
+      }
+      const val = v => (v == null || v === '' ? '—' : esc(v));
+      const rows = list.map((p, idx) => {
+        const r = p.result || {};
+        const inds = (Array.isArray(r.indicators) && r.indicators.length) ? r.indicators : [{}];
+        const k = inds.length;
+        let measures;
+        if (Array.isArray(r.measures) && r.measures.length) {
+          measures = (r.measures_title ? `<span class="m-title">${esc(r.measures_title)}</span>` : '') +
+            '<ul>' + r.measures.map(m => `<li>${esc(m)}</li>`).join('') + '</ul>';
+        } else {
+          measures = val(r.measures);
+        }
+        return inds.map((ind, i) => {
+          const first = i === 0;
+          return `<tr class="${first ? 'proj-first' : ''}">` +
+            (first ? `<td class="c-num" rowspan="${k}">${idx + 1}</td>
+              <td class="c-name" rowspan="${k}">${esc(r.process_name || p.name)}</td>
+              <td class="c-desc" rowspan="${k}">${val(r.description_before || p.description)}</td>` : '') +
+            `<td>${val(ind.name)}</td><td class="c-unit">${val(ind.unit)}</td><td class="c-val">${val(ind.before)}</td><td class="c-val c-after">${val(ind.after)}</td>` +
+            (first ? `<td class="c-meas" rowspan="${k}">${measures}</td>` : '') +
+            '</tr>';
+        }).join('');
+      }).join('');
+      host.innerHTML = `<div class="res-card"><div class="res-scroll"><table class="res-table">
+        <thead>
+          <tr>
+            <th rowspan="2">№</th>
+            <th rowspan="2">Наименование процесса</th>
+            <th rowspan="2">Описание процесса до применения оптимизации</th>
+            <th colspan="4">Целевой показатель<small>(уровень удовлетворённости пользователей, уровень цифровизации, длительность, кол-во избыточных документов, кол-во лишних согласований, минимизация или формирование регламентов/инструкций)</small></th>
+            <th rowspan="2">Мероприятия по изменению процесса</th>
+          </tr>
+          <tr>
+            <th>Наименование</th><th>Ед. измерения</th><th>Значение до оптимизации</th><th>Значение после оптимизации</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table></div></div>`;
+    }
+
     function renderTimeline(data) {
       const years = data.flatMap(p => Object.keys((p.stages && p.stages.implementation && p.stages.implementation.quarters) || {})
         .map(k => { const m = String(k).match(/^(\d{4})/); return m ? +m[1] : null; }).filter(Boolean));
@@ -859,11 +922,10 @@
       const active = data.filter(p => !isDeployedStatus(p));
       const done = data.filter(p => isDeployedStatus(p));
       document.getElementById('tl-table-active').innerHTML = tlSkeleton('active');
-      document.getElementById('tl-table-done').innerHTML = tlSkeleton('done');
       document.getElementById('cnt-active').textContent = active.length;
       document.getElementById('cnt-done').textContent = done.length;
       renderTimelineTable(active, 'active', 'Нет проектов в работе');
-      renderTimelineTable(done, 'done', 'Завершённых проектов пока нет');
+      renderResultsTable(done);
       syncTlVw();
     }
 
