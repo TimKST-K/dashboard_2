@@ -187,6 +187,16 @@
     .tl-dot.done { background: #0F2D69; box-shadow: 0 0 0 1px #0F2D69; }
     .tl-dot.planned { background: #fff; border: 2px solid #234B9B; box-shadow: none; }
 
+    /* Обозначения этапов: владелец - красный «!», совместная работа - рукопожатие, ПО - зелёная звезда */
+    .tl-mark { position: relative; z-index: 3; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      line-height: 1; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+    .tl-mark.owner { background: #E61E3C; color: #fff; font-size: 22px; box-shadow: 0 2px 6px rgba(230,30,60,0.35); }
+    .tl-mark.joint { background: #fff; border: 2px solid #EB691E; font-size: 17px; box-shadow: 0 2px 6px rgba(235,105,30,0.30); }
+    .tl-mark.sm { width: 20px; height: 20px; font-size: 13px; animation: none; box-shadow: none; display: inline-flex; vertical-align: middle; }
+    .tl-mark.joint.sm { font-size: 11px; border-width: 1.5px; }
+    /* Завершённый этап - зелёная галочка */
+    .tl-check.sm { width: 22px; height: 22px; line-height: 22px; font-size: 14px; border-radius: 5px; box-shadow: none; }
+
     .tl-name-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
     .tl-name-wrap .badge { white-space: nowrap; }
 
@@ -240,6 +250,10 @@
       .tl-track-cell { min-height: 92px; }
       .tl-q-label { display: none; }
       .tl-star { font-size: 34px; }
+      .tl-mark { width: 28px; height: 28px; }
+      .tl-mark.owner { font-size: 19px; }
+      .tl-mark.joint { font-size: 15px; }
+      .tl-mark.sm { width: 20px; height: 20px; }
     }
     
     /* Звезды */
@@ -271,9 +285,9 @@
     .info-item { font-size: 13px; color: var(--text-muted); }
     .info-item strong { color: var(--text-main); font-weight: 600; display: inline-block; min-width: 110px; }
     
-    .tl-legend { display: flex; flex-wrap: wrap; gap: 8px 24px; padding: 14px 20px; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border); background: #fff; position: relative; }
-    .lg-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #0F2D69; }
-    .lg-check { display: inline-block; width: 16px; height: 16px; border-radius: 4px; background: #009B64; color: #fff; font-size: 11px; line-height: 16px; text-align: center; }
+    .tl-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; padding: 14px 20px; font-size: 12px; color: var(--text-muted); background: #fff; position: relative; }
+    .tl-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+    .tl-legend .tl-check.sm { position: static; width: 20px; height: 20px; line-height: 20px; font-size: 13px; }
 
     /* ===== НАПРАВЛЕНИЯ ДЕЯТЕЛЬНОСТИ ===== */
     .dir-sections { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 24px; }
@@ -309,13 +323,12 @@
     .tl-legend span { display: flex; align-items: center; gap: 6px; }
     .star-icon { font-size: 16px; }
 
-    /* ===== НАЧЕРТАНИЯ ФИРМЕННОГО ШРИФТА (включаются, только если шрифт реально загрузился) =====
-       Доступны Regular (400) и Black (900): Black - заголовки и крупные числа, курсив - пояснения. */
+    /* ===== НАЧЕРТАНИЯ ФИРМЕННОГО ШРИФТА (включаются, только если шрифт реально загрузился) ===== */
     html.brand-fonts * { font-weight: 400 !important; }
     html.brand-fonts .header h1, html.brand-fonts .part-title, html.brand-fonts .section-title,
     html.brand-fonts .kpi-card .value, html.brand-fonts .dir-block .val, html.brand-fonts .opt-total-card .val,
     html.brand-fonts .artifact-card .val, html.brand-fonts .dir-head h3, html.brand-fonts .tl-header-cell h4,
-    html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active { font-weight: 900 !important; }
+    html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active, html.brand-fonts .tl-mark.owner { font-weight: 900 !important; }
     html.brand-fonts .section-title span, html.brand-fonts .part-title span, html.brand-fonts .kpi-card .sub,
     html.brand-fonts .dir-head p, html.brand-fonts .dir-content p, html.brand-fonts .tl-header-cell p { font-style: italic; }
     .tl-name-cell { font-size: 14px; }
@@ -359,32 +372,24 @@
   <!-- ЧАСТЬ 1: ПРОЕКТЫ И СТАТУСЫ -->
   <section class="tab-panel" id="panel-projects" role="tabpanel" aria-labelledby="tab-projects">
     <h2 class="part-title">Проекты и статусы <span>таймлайн проектов по этапам</span></h2>
-    <div class="timeline-container">
-    <div class="tl-legend">
-      <span><span class="star-icon" style="color:#E61E3C">★</span> Этап на стороне владельца процесса</span>
-      <span><span class="star-icon" style="color:#EB691E">★</span> Совместная работа ПО и владельца</span>
-      <span><span class="star-icon" style="color:#009B64">★</span> Работа на стороне ПО</span>
-      <span><span class="lg-dot"></span> Этап завершён</span>
-      <span><span class="lg-check">✓</span> Завершён</span>
-    </div>
 
-    <div class="tl-scroll" id="tl-scroll">
-      <div class="tl-grid" id="tl-grid">
-        <div class="tl-header-cell title">Название проекта</div>
-        <div class="tl-header-cell"><h4>Краткое описание</h4></div>
-        <div class="tl-header-cell"><h4>Анализ</h4><p>ЛНА, интервью, CJM</p></div>
-        <div class="tl-header-cell"><h4>Текущее состояние</h4><p>Проблематика, первопричины</p></div>
-        <div class="tl-header-cell"><h4>Целевое состояние</h4><p>Предложения, план</p></div>
-        <div class="tl-header-cell"><h4>Принятие решения</h4><p>Владельцем</p></div>
-        <div class="tl-header-cell impl-head"><h4>Внедрение изменений</h4><div class="impl-years" id="impl-years"></div></div>
-        <div class="tl-header-cell"><h4>Завершён</h4><p>Результат в эксплуатации</p></div>
-
-        <div id="timeline-body" style="display: contents;"></div>
+    <!-- Условные обозначения -->
+    <div class="timeline-container" style="margin: 16px 0;">
+      <div class="tl-legend">
+        <span><span class="tl-mark owner sm">!</span> Этап на стороне владельца процесса</span>
+        <span><span class="tl-mark joint sm">🤝</span> Совместная работа ПО и владельца</span>
+        <span><span class="star-icon" style="color:#009B64">★</span> Работа на стороне ПО</span>
+        <span><span class="tl-check sm">✓</span> Этап завершён</span>
       </div>
     </div>
-  </div>
 
-  <!-- Экспорт -->
+    <div class="section-title">Проекты в работе <span id="cnt-active"></span></div>
+    <div id="tl-table-active"></div>
+
+    <div class="section-title">Завершённые проекты <span id="cnt-done"></span></div>
+    <div id="tl-table-done"></div>
+
+    <!-- Экспорт -->
   <div style="display:flex; justify-content:flex-end; gap:12px; margin-bottom: 24px;">
     <button id="export-csv" style="padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer; border:1px solid var(--primary); background:var(--primary); color:#fff;">Экспорт CSV</button>
     <button id="export-json" style="padding:8px 16px; font-size:13px; border-radius:8px; cursor:pointer; border:1px solid var(--border); background:#fff; color:var(--text-main);">Экспорт JSON</button>
@@ -432,10 +437,12 @@
       const m = String(v == null ? '' : v).match(/^(\d{4})-(\d{2})-(\d{2})/);
       return m ? `${m[3]}.${m[2]}.${m[1]}` : (v ? String(v) : '—');
     }
-    // Ширина видимой области таблицы таймлайна (для раскрытой части строки)
+    // Ширина видимой области каждой таблицы таймлайна (для раскрытой части строки)
     function syncTlVw() {
-      const g = document.getElementById('tl-grid'), sc = document.getElementById('tl-scroll');
-      if (g && sc && sc.clientWidth) g.style.setProperty('--tl-vw', sc.clientWidth + 'px');
+      document.querySelectorAll('.tl-scroll').forEach(sc => {
+        const g = sc.querySelector('.tl-grid');
+        if (g && sc.clientWidth) g.style.setProperty('--tl-vw', sc.clientWidth + 'px');
+      });
     }
     window.addEventListener('resize', syncTlVw);
 
@@ -652,10 +659,11 @@
     // ============================================================
     // РЕНДЕР ТАЙМЛАЙНА (ТОЛЬКО ЭТАПЫ)
     // ============================================================
-    function renderTimeline(data) {
-      const container = document.getElementById('timeline-body');
+    function renderTimelineTable(data, key, emptyText) {
+      const container = document.getElementById('timeline-body-' + key);
+      if (!container) return;
       if (!data.length) {
-        container.innerHTML = '<div style="grid-column: 1/-1; padding:40px; text-align:center; color:#929292;">Нет проектов</div>';
+        container.innerHTML = '<div style="grid-column: 1/-1; padding:32px; text-align:center; color:#929292;">' + esc(emptyText) + '</div>';
         return;
       }
 
@@ -663,22 +671,14 @@
       const COLS = stageKeys.length + 1; // + финальный столбец «Завершён»
       const isDeployed = p => isDeployedStatus(p);
 
-      const dataYears = data.flatMap(p => Object.keys((p.stages && p.stages.implementation && p.stages.implementation.quarters) || {})
-        .map(k => { const m = String(k).match(/^(\d{4})/); return m ? +m[1] : null; }).filter(Boolean));
-      const minY = Math.min(2024, ...dataYears), maxY = Math.max(2026, ...dataYears);
-      const YEARS = []; for (let y = minY; y <= maxY; y++) YEARS.push(y);
+      const YEARS = TL_YEARS;
       const SLOTS = YEARS.length * 4;
-      const slotOf = key => {
-        const m = String(key).match(/^(\d{4})[-_ ]?Q([1-4])$/i);
+      const slotOf = k => {
+        const m = String(k).match(/^(\d{4})[-_ ]?Q([1-4])$/i);
         if (!m) return -1;
         const i = (+m[1] - YEARS[0]) * 4 + (+m[2] - 1);
         return i >= 0 && i < SLOTS ? i : -1;
       };
-      const gridEl = document.getElementById('tl-grid');
-      gridEl.style.setProperty('--yrs', YEARS.length);
-      document.getElementById('impl-years').innerHTML = YEARS.map(y =>
-        `<div class="impl-yr"><b>${y}</b><div class="impl-qs"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div></div>`).join('');
-      syncTlVw();
 
       function getStageStates(p) {
         if (isDeployed(p)) return [...stageKeys.map(() => 'done'), 'deployed'];
@@ -727,14 +727,19 @@
       container.innerHTML = data.map(p => {
         const states = getStageStates(p);
         const role = ['owner', 'joint', 'po'].includes(p.stage_role) ? p.stage_role : 'po';
-        const star = `<div class="tl-star ${role}">★</div>`;
+        const marker = roleMarker(role);
+        const doneMark = (title) => `<div class="tl-check sm" title="${title}">✓</div>`;
         const dot = c => `<div class="tl-dot ${c}"></div>`;
+
+        // Линия идёт только до текущего этапа (для завершённых проектов - до итоговой галочки)
+        const endCol = states[COLS - 1] === 'deployed' ? COLS - 1 : states.indexOf('current');
 
         let starSeen = false;
         let cellsHtml = '';
         for (let i = 0; i < COLS; i++) {
           const state = states[i];
           let inner = '';
+          let endPct = 50;   // где обрывается линия в текущем столбце (в % ширины)
           if (state === 'deployed') {
             inner = `<div class="tl-check" title="Завершён">✓</div>`;
           } else if (i === 4) {
@@ -746,29 +751,36 @@
               qs.forEach(x => { const si = slotOf(x.key); if (si >= 0) slots[si] = x; });
               let starSlot = -1;
               slots.forEach((x, si) => { if (x && x.status === 'current') starSlot = si; });
+              if (starSlot >= 0) endPct = (starSlot + 0.5) / SLOTS * 100;
               inner = `<div class="tl-q-wrap">` + slots.map((x, si) => {
                 const cls = 'tl-q' + (si > 0 && si % 4 === 0 ? ' ys' : '');
                 if (!x || (starSlot >= 0 && si > starSlot)) return `<div class="${cls}"></div>`;
-                const mk = x.status === 'current' ? star : dot(x.status === 'done' ? 'done' : 'planned');
+                const mk = x.status === 'current' ? marker : (x.status === 'done' ? doneMark('Этап завершён') : dot('planned'));
                 const note = x.items.join(', ');
                 return `<div class="${cls}" title="${esc(x.label + (note ? ': ' + note : ''))}">${mk}${note ? `<div class="tl-q-label">${esc(note)}</div>` : ''}</div>`;
               }).join('') + `</div>`;
               if (state === 'current') starSeen = true;
             } else if (state === 'current') {
-              inner = star; starSeen = true;
+              inner = marker; starSeen = true;
             } else {
-              inner = dot(state === 'done' ? 'done' : '');
+              inner = state === 'done' ? doneMark('Этап завершён') : dot('');
             }
           } else if (starSeen) {
             inner = '';
           } else if (state === 'current') {
-            inner = star; starSeen = true;
+            inner = marker; starSeen = true;
           } else {
-            inner = dot(state === 'done' ? 'done' : '');
+            inner = state === 'done' ? doneMark('Этап завершён') : dot('');
+          }
+
+          let lineHtml = '';
+          if (endCol >= 0) {
+            if (i < endCol) lineHtml = '<div class="tl-line" style="width:100%"></div>';
+            else if (i === endCol) lineHtml = `<div class="tl-line" style="width:${endPct}%"></div>`;
           }
           cellsHtml += `
             <div class="tl-track-cell${i === COLS - 1 ? ' last' : ''}">
-              <div class="tl-line"></div>
+              ${lineHtml}
               ${inner}
             </div>
           `;
@@ -795,8 +807,8 @@
                     ${(() => {
                       const qs = getQuarters(p, states[4]);
                       if (!qs.length) return '<div style="color:var(--text-muted); font-size:13px;">Данные по кварталам пока отсутствуют</div>';
-                      const mark = { done: '●', current: '★', todo: '○' };
-                      return qs.map(x => `<div class="q-item"><strong>${mark[x.status] || '●'} ${esc(x.label)}:</strong> <span>${esc(x.items.join(', ') || '—')}</span></div>`).join('');
+                      const mark = { done: '✓', current: '★', todo: '○' };
+                      return qs.map(x => `<div class="q-item"><strong>${mark[x.status] || '✓'} ${esc(x.label)}:</strong> <span>${esc(x.items.join(', ') || '—')}</span></div>`).join('');
                     })()}
                   </div>
                 </div>
@@ -805,6 +817,54 @@
           </div>
         `;
       }).join('');
+    }
+
+
+    // Обозначения текущего этапа в зависимости от того, чья сторона работает
+    function roleMarker(role) {
+      if (role === 'owner') return '<div class="tl-mark owner" title="Этап на стороне владельца процесса">!</div>';
+      if (role === 'joint') return '<div class="tl-mark joint" title="Совместная работа ПО и владельца">🤝</div>';
+      return '<div class="tl-star po" title="Работа на стороне ПО">★</div>';
+    }
+    let TL_YEARS = [2024, 2025, 2026];
+
+    // Каркас таблицы таймлайна (шапка с годами и кварталами)
+    function tlSkeleton(key) {
+      const years = TL_YEARS.map(y =>
+        `<div class="impl-yr"><b>${y}</b><div class="impl-qs"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span></div></div>`).join('');
+      return `<div class="timeline-container">
+        <div class="tl-scroll" id="tl-scroll-${key}">
+          <div class="tl-grid" id="tl-grid-${key}" style="--yrs:${TL_YEARS.length}">
+            <div class="tl-header-cell title">Название проекта</div>
+            <div class="tl-header-cell"><h4>Краткое описание</h4></div>
+            <div class="tl-header-cell"><h4>Анализ</h4><p>ЛНА, интервью, CJM</p></div>
+            <div class="tl-header-cell"><h4>Текущее состояние</h4><p>Проблематика, первопричины</p></div>
+            <div class="tl-header-cell"><h4>Целевое состояние</h4><p>Предложения, план</p></div>
+            <div class="tl-header-cell"><h4>Принятие решения</h4><p>Владельцем</p></div>
+            <div class="tl-header-cell impl-head"><h4>Внедрение изменений</h4><div class="impl-years">${years}</div></div>
+            <div class="tl-header-cell"><h4>Завершён</h4><p>Результат в эксплуатации</p></div>
+            <div id="timeline-body-${key}" style="display: contents;"></div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // Две таблицы: проекты в работе / на паузе и завершённые проекты
+    function renderTimeline(data) {
+      const years = data.flatMap(p => Object.keys((p.stages && p.stages.implementation && p.stages.implementation.quarters) || {})
+        .map(k => { const m = String(k).match(/^(\d{4})/); return m ? +m[1] : null; }).filter(Boolean));
+      const minY = Math.min(2024, ...years), maxY = Math.max(2026, ...years);
+      TL_YEARS = []; for (let y = minY; y <= maxY; y++) TL_YEARS.push(y);
+
+      const active = data.filter(p => !isDeployedStatus(p));
+      const done = data.filter(p => isDeployedStatus(p));
+      document.getElementById('tl-table-active').innerHTML = tlSkeleton('active');
+      document.getElementById('tl-table-done').innerHTML = tlSkeleton('done');
+      document.getElementById('cnt-active').textContent = active.length;
+      document.getElementById('cnt-done').textContent = done.length;
+      renderTimelineTable(active, 'active', 'Нет проектов в работе');
+      renderTimelineTable(done, 'done', 'Завершённых проектов пока нет');
+      syncTlVw();
     }
 
     // ============================================================
