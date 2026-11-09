@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Центр трансформации процессов университета</title>
+  <link rel="icon" type="image/png" href="logo.png" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     /* ===== ФИРМЕННЫЙ ШРИФТ Brand (Regular / Italic / Black) =====
@@ -322,14 +323,14 @@
 
     /* ===== НАЧЕРТАНИЯ ФИРМЕННОГО ШРИФТА (включаются, только если шрифт реально загрузился) ===== */
     html.brand-fonts * { font-weight: 400 !important; }
-    html.brand-fonts .header h1, html.brand-fonts .part-title, html.brand-fonts .section-title,
+    html.brand-fonts .site-header h1, html.brand-fonts .part-title, html.brand-fonts .section-title,
     html.brand-fonts .kpi-card .value, html.brand-fonts .dir-block .val, html.brand-fonts .opt-total-card .val,
     html.brand-fonts .artifact-card .val, html.brand-fonts .dir-head h3, html.brand-fonts .tl-header-cell h4,
     html.brand-fonts .impl-yr b, html.brand-fonts .tab-btn.active, html.brand-fonts .tl-mark.owner,
     html.brand-fonts .res-table thead th, html.brand-fonts .status-head h4, html.brand-fonts .status-sec h5 { font-weight: 900 !important; }
     html.brand-fonts .section-title span, html.brand-fonts .part-title span, html.brand-fonts .kpi-card .sub,
     html.brand-fonts .dir-head p, html.brand-fonts .dir-content p, html.brand-fonts .tl-header-cell p,
-    html.brand-fonts .res-table thead th small { font-style: italic; }
+    html.brand-fonts .res-table thead th small, html.brand-fonts .site-header .subtitle { font-style: italic; }
     .tl-name-cell { font-size: 14px; }
 
     /* ===== ЧАСТИ ДАШБОРДА (вкладки) ===== */
@@ -347,8 +348,37 @@
     /* ===== ФИРМЕННАЯ ПАЛИТРА =====
        Основные: тёмно-синий #0F2D69, синий #234B9B; серые #929292 / #C6C6C6 / #E6E6E6.
        Дополнительные (насыщенные): голубой #0FA0D7, зелёный #009B64, оранжевый #EB691E, жёлтый #FAB900, красный #E61E3C. */
-    .header h1, .section-title, .dir-head h3, .tl-header-cell h4, .kpi-card .value, .dir-block .val,
+    .section-title, .dir-head h3, .tl-header-cell h4, .kpi-card .value, .dir-block .val,
     .opt-total-card .val, .artifact-card .val, .impl-yr b { color: #0F2D69; }
+
+    /* ===== ОФОРМЛЕНИЕ: фон, шапка с логотипом и паттерном, подвал ===== */
+    :root { --bg: #E4E8F0; --border: #D6DAE3; --shadow-sm: 0 1px 3px rgba(15,45,105,0.10); --shadow-md: 0 4px 12px rgba(15,45,105,0.14); }
+    body { background: var(--bg); }
+
+    .site-header { position: relative; margin: -24px -24px 24px; background: #0F2D69; color: #fff; overflow: hidden; border-bottom: 3px solid #0FA0D7; }
+    .site-header-inner { position: relative; z-index: 1; display: flex; align-items: center; gap: 18px; padding: 18px 24px; }
+    .site-logo { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(0,0,0,0.25); }
+    .site-titles { min-width: 0; }
+    .site-header h1 { margin: 0; font-size: 24px; line-height: 1.2; letter-spacing: -0.4px; color: #fff; }
+    .site-header .subtitle { margin: 4px 0 0; font-size: 13px; color: #C9D6EE; }
+    .site-header .date { margin-left: auto; font-size: 12px; color: #C9D6EE; white-space: nowrap; }
+    .site-pattern { position: absolute; top: 0; right: 0; bottom: 0; width: 46%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M0 0H120V30H30V120H0Z' fill='%23234B9B' fill-opacity='.55'/%3E%3Cpath d='M30 30H120V60H60V120H30Z' fill='%230A2254' fill-opacity='.60'/%3E%3Cpath d='M60 60H120V90H90V120H60Z' fill='%23234B9B' fill-opacity='.38'/%3E%3C/svg%3E"); background-size: 120px 120px; background-position: right top;
+      -webkit-mask-image: linear-gradient(to left, #000 15%, transparent 95%); mask-image: linear-gradient(to left, #000 15%, transparent 95%); }
+    @media (max-width: 600px) {
+      .site-header { margin: -12px -12px 16px; }
+      .site-header-inner { padding: 14px 14px; gap: 12px; }
+      .site-logo { width: 44px; height: 44px; }
+      .site-header h1 { font-size: 18px; }
+      .site-header .date { display: none; }
+    }
+
+    .section-title::before { content: ''; flex: 0 0 4px; height: 18px; background: #0F2D69; border-radius: 2px; }
+    .section-title span { margin-left: 4px; }
+
+    .site-footer { margin-top: 32px; text-align: center; color: var(--text-muted); font-size: 12px; }
+    .site-footer-dots { height: 36px; margin-bottom: 10px; border-radius: 12px; background-color: #D9DEE8;
+      background-image: radial-gradient(circle, #0F2D69 3px, transparent 3.6px); background-size: 54px 36px; background-position: 27px 18px; }
+    .site-footer p { margin: 0 0 8px; }
 
     /* ===== ТАБЛИЦА ЗАВЕРШЁННЫХ ПРОЕКТОВ ===== */
     .res-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-sm); margin-bottom: 24px; overflow: hidden; }
@@ -393,13 +423,17 @@
 </head>
 <body>
 
-  <div class="header">
-    <div>
-      <h1>Центр трансформации процессов университета</h1>
-      <p class="subtitle">Дашборд проектов и оптимизации процессов</p>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <img class="site-logo" src="logo.png" alt="Высшая школа экономики" width="56" height="56" onerror="this.style.display='none'" />
+      <div class="site-titles">
+        <h1>Центр трансформации процессов университета</h1>
+        <p class="subtitle">Дашборд проектов и оптимизации процессов</p>
+      </div>
+      <div class="date" id="update-date"></div>
     </div>
-    <div class="date" id="update-date"></div>
-  </div>
+    <div class="site-pattern" aria-hidden="true"></div>
+  </header>
 
   
   <!-- ЧАСТИ ДАШБОРДА -->
@@ -452,6 +486,11 @@
     <div class="chart-card"><h3>Этапы реализации проектов</h3><div class="chart-wrap"><canvas id="chart-stages"></canvas></div></div>
   </div>
   </section>
+
+  <footer class="site-footer">
+    <div class="site-footer-dots" aria-hidden="true"></div>
+    <p>Дашборд проектов и оптимизации процессов</p>
+  </footer>
 
   <script>
     let rawData = [];
@@ -864,7 +903,6 @@
     }
     let TL_YEARS = [2024, 2025, 2026];
 
-    // ---- Блок «Статус» в раскрывающемся списке проекта ----
     const STAGE_NAMES = { analysis: 'Анализ', current_state: 'Текущее состояние', target_state: 'Целевое состояние',
       decision: 'Принятие решения', implementation: 'Внедрение изменений', deployed: 'Завершён' };
     const ROLE_CHIPS = { owner: ['!', 'На стороне владельца процесса'], joint: ['🤝', 'Совместная работа ПО и владельца'], po: ['★', 'Работа на стороне ПО'] };
