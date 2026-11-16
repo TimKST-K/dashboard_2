@@ -271,7 +271,7 @@
       grid-column: 1 / -1; display: none; background: #FFFFFF;
       border-bottom: 1px solid var(--border); padding: 0 20px 20px 20px;
     }
-    .tl-row-wrapper.open .tl-details-cell { display: block; }
+    .tl-row-wrapper.open .tl-details-cell { display: block; cursor: text; user-select: text; -webkit-user-select: text; }
     
     .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .badge-done { background: #DDF2EA; color: #006B45; border: 1px solid #A6DBC8; }
@@ -490,11 +490,17 @@
   </section>
 
   <footer class="site-footer">
-    <div class="site-footer-dots" aria-hidden="true"></div>
     <p>Дашборд проектов и оптимизации процессов</p>
   </footer>
 
   <script>
+    // Раскрытие строки по клику; клики внутри раскрытого блока и выделение текста строку не сворачивают
+    function toggleRow(ev, el) {
+      if (ev.target.closest('.tl-details-cell')) return;
+      const sel = window.getSelection && window.getSelection();
+      if (sel && !sel.isCollapsed && String(sel).trim() !== '') return;
+      el.classList.toggle('open');
+    }
     let rawData = [];
     let globalKpi = {};
     let charts = {};
@@ -864,7 +870,7 @@
         }
 
         return `
-          <div class="tl-row-wrapper" onclick="this.classList.toggle('open')">
+          <div class="tl-row-wrapper" onclick="toggleRow(event, this)">
             <div class="tl-name-cell"><div class="tl-name-wrap"><span>${esc(p.name)}</span><span class="badge ${statusBadgeClass(p.status)}">${esc(p.status)}</span></div></div>
             <div class="tl-desc-cell"><span title="${esc(p.description || '')}">${p.description ? esc(p.description) : '—'}</span></div>
             ${cellsHtml}
